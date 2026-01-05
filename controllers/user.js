@@ -1,0 +1,63 @@
+const User = require('../models/user')
+const express = require('express')
+const router = express.Router()
+
+router.get('/', async (req,res) =>{
+    try {
+        const allUsers = await User.find()
+        res.status(200).json(allUsers)
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({err: 'Failed to Fetch Data'}) 
+    }
+})
+
+router.get('/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        const oneUser = await User.findById(id)
+        if (!oneUser) {
+            res.status(404).json({err: 'User Not Found'})
+        } else {
+            res.status(200).json({oneUser})
+        }
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({err: 'Failed to Fetch Data'})        
+    }
+})
+
+router.post('/', async (req, res) => {
+    try {
+        const creatdUser = await User.create(req.body)
+        res.status(201).json(creatdUser)        
+    } catch (err) {
+        console.log(err.message)
+        res.status(422).json({err: 'Failed to Create'})
+    }
+
+})
+
+router.put('/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        const oneUser = await User.findByIdAndUpdate(id, req.body, {new:true})
+        res.status(202).json(oneUser)
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({err: 'Failed to Fetch Data'})        
+    }
+})
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        await User.findByIdAndDelete(id)
+        res.status(200).json({msg: 'Deleted'})
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({err: 'Failed to Delete'})
+    }
+})
+
+module.exports = router

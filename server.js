@@ -10,6 +10,7 @@ const port = process.env.PORT || 4000
 const authCtrl = require('./controllers/auth');
 const productCtrl = require("./controllers/product")
 const orderCtrl = require('./controllers/order');
+const userCtrl = require('./controllers/user');
 
 // Middleware ================================================================================================
 const verifyToken = require('./middleware/verify-token');
@@ -29,10 +30,11 @@ app.use(logger('dev'));
 
 // Public Routes =============================================================================================
 app.use('/auth', authCtrl);
+app.use("/users", userCtrl)
 app.use("/products", productCtrl)
 
 // Protected Routes ==========================================================================================
-app.use(verifyToken);
+app.use(verifyToken)
 app.use('/orders', orderCtrl)
 
 
