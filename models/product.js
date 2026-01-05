@@ -7,10 +7,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    imageLink: {
-      type: String,
-      required: true
-    },
     description: {
       type: String
     },
@@ -20,6 +16,10 @@ const productSchema = new mongoose.Schema(
     },
     stock: {
       type: Number,
+      required: true
+    },
+    imageLink: {
+      type: String,
       required: true
     },
     user: {
