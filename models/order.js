@@ -4,8 +4,8 @@ const mongoose = require('mongoose')
 const orderSchema = mongoose.Schema(
   {
     product: {
-      type: String,
-      required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product'
     },
     notes: {
       type: String
@@ -15,7 +15,9 @@ const orderSchema = mongoose.Schema(
       required: true
     },
     status: {
-      enum: [pending, approved, rejected]
+      enum: [pending, approved, rejected],
+      required: true,
+      default: pending
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +36,7 @@ orderSchema.set('toJSON', {
 })
 
 // then we register the model with mongoose
-const order = mongoose.model('order', orderSchema)
+const Order = mongoose.model('Order', orderSchema)
 
 // export the model
-module.exports = order
+module.exports = Order
