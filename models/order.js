@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 // we need mongoose schema
-const orderSchema = mongoose.Schema(
+const orderSchema = new mongoose.Schema(
   {
     product: {
       type: mongoose.Schema.Types.ObjectId,
