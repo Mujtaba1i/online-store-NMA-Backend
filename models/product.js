@@ -29,11 +29,11 @@ const productSchema = new mongoose.Schema(
     }
   },
   {
-    Timestamps: true
+    timestamps: true
   }
 )
 
-userSchema.set('toJSON', {
+productSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     delete returnedObject.password
   }

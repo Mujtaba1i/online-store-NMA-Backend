@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 // we need mongoose schema
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -15,15 +15,15 @@ const userSchema = mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: [admin, owner, customer],
-      default: customer
+      enum: ["admin", "owner", "customer"],
+      default: "customer"
     },
     cart: {
       type: Array
     }
   },
   {
-    Timestamps: true
+    timestamps: true
   }
 )
 
