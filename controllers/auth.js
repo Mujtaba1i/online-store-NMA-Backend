@@ -6,6 +6,7 @@ const User = require('../models/user');
 
 router.post('/sign-up', async (req, res) => {
   try {
+    console.log(req.body)
     const { username, password } = req.body
     const userInDatabase = await User.findOne({ username });
 
@@ -21,6 +22,9 @@ router.post('/sign-up', async (req, res) => {
     const payload = {
       username: user.username,
       _id: user._id,
+      role: user.role,
+      wantToBeSeller: user.wantToBeSeller,
+      cart: user.cart
     };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
@@ -50,6 +54,9 @@ router.post('/sign-in', async (req, res) => {
     const payload = {
       username: userInDatabase.username,
       _id: userInDatabase._id,
+      role: userInDatabase.role,
+      wantToBeSeller: userInDatabase.wantToBeSeller,
+      cart: userInDatabase.cart
     };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
