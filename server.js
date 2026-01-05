@@ -10,6 +10,7 @@ const logger = require('morgan');
 
 // Controllers
 const authCtrl = require('./controllers/auth');
+const productCtrl = require("./controllers/product")
 
 // Middleware
 const verifyToken = require('./middleware/verify-token');
@@ -26,6 +27,7 @@ app.use(logger('dev'));
 
 // Public Routes
 app.use('/auth', authCtrl);
+app.use("/products", productCtrl)
 
 // Protected Routes
 app.use(verifyToken);
