@@ -6,14 +6,14 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 4000
 
-// Controllers =====================================================================
+// Controllers ===============================================================================================
 const authCtrl = require('./controllers/auth');
 const orderCtrl = require('./controllers/order');
 
-// Middleware ======================================================================
+// Middleware ================================================================================================
 const verifyToken = require('./middleware/verify-token');
 
-// Connect to DB ===================================================================
+// Connect to DB =============================================================================================
 try {
   mongoose.connect(process.env.MONGODB_URI)
   mongoose.connection.on('connected', () => console.log(`Connected to MongoDB ${mongoose.connection.name}.`))  
@@ -21,20 +21,20 @@ try {
   console.error('Ran into an error: '+err)
 }
 
-// Middleware ======================================================================
+// Middleware ================================================================================================
 app.use(cors());
 app.use(express.json());
 app.use(logger('dev'));
 
-// Public Routes ===================================================================
+// Public Routes =============================================================================================
 app.use('/auth', authCtrl);
 
-// Protected Routes ================================================================
+// Protected Routes ==========================================================================================
 app.use(verifyToken);
 app.use('/orders', orderCtrl)
 
 
 
 
-// Listiner ========================================================================
+// Listiner ==================================================================================================
 app.listen(port, () => console.log('Listening on port ' + port))

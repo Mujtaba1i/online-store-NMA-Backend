@@ -15,9 +15,9 @@ const orderSchema = new mongoose.Schema(
       required: true
     },
     status: {
-      enum: [pending, approved, rejected],
-      required: true,
-      default: pending
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema(
     }
   },
   {
-    Timestamps: true
+    timestamps: true
   }
 )
 
