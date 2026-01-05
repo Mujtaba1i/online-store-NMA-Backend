@@ -8,11 +8,8 @@ const port = process.env.PORT || 4000
 
 // Controllers ===============================================================================================
 const authCtrl = require('./controllers/auth');
-<<<<<<< HEAD
 const productCtrl = require("./controllers/product")
-=======
 const orderCtrl = require('./controllers/order');
->>>>>>> main
 
 // Middleware ================================================================================================
 const verifyToken = require('./middleware/verify-token');
