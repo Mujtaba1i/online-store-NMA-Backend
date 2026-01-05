@@ -1,9 +1,13 @@
 const mongoose = require('mongoose')
 
 // we need mongoose schema
-const productSchema = mongoose.Schema(
-{
+const productSchema = new mongoose.Schema(
+  {
     name: {
+      type: String,
+      required: true
+    },
+    imageLink: {
       type: String,
       required: true
     },
