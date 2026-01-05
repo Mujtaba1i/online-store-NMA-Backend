@@ -1,26 +1,40 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 // we need mongoose schema
-const userSchema = mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-  },
+const userSchema = mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true
+    },
 
-  password: {
-    type: String,
-    required: true,
+    password: {
+      type: String,
+      required: true
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: [admin, owner, customer],
+      default: customer
+    },
+    cart: {
+      type: Array
+    }
   },
-});
+  {
+    Timestamps: true
+  }
+)
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    delete returnedObject.password;
-  },
-});
+    delete returnedObject.password
+  }
+})
 
 // then we register the model with mongoose
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema)
 
 // export the model
-module.exports = User;
+module.exports = User
