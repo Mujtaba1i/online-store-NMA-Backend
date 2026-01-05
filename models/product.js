@@ -36,7 +36,7 @@ userSchema.set('toJSON', {
 })
 
 // then we register the model with mongoose
-const product = mongoose.model('product', productSchema)
+const Product = mongoose.model('Product', productSchema)
 
 // export the model
-module.exports = product
+module.exports = Product
