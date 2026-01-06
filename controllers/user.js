@@ -22,6 +22,16 @@ router.get('/sellers-request', async (req,res) =>{
     }
 })
 
+router.get('/sellers', async (req,res) =>{
+    try {
+        const allUsers = await User.find({role: 'seller'})
+        res.status(200).json(allUsers)
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({err: 'Failed to Fetch Data'}) 
+    }
+})
+
 router.get('/:id', async (req, res) => {
     try {
         const {id} = req.params
