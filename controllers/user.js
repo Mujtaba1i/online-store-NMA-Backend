@@ -2,9 +2,19 @@ const User = require('../models/user')
 const express = require('express')
 const router = express.Router()
 
-router.get('/', async (req,res) =>{
+router.get('/customers', async (req,res) =>{
     try {
-        const allUsers = await User.find()
+        const allUsers = await User.find({role: 'customer', wantToBeSeller: false})
+        res.status(200).json(allUsers)
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({err: 'Failed to Fetch Data'}) 
+    }
+})
+
+router.get('/sellersRequest', async (req,res) =>{
+    try {
+        const allUsers = await User.find({role: 'customer', wantToBeSeller: true})
         res.status(200).json(allUsers)
     } catch (err) {
         console.log(err.message)
