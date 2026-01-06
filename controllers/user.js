@@ -12,7 +12,7 @@ router.get('/customers', async (req,res) =>{
     }
 })
 
-router.get('/sellersRequest', async (req,res) =>{
+router.get('/sellers-request', async (req,res) =>{
     try {
         const allUsers = await User.find({role: 'customer', wantToBeSeller: true})
         res.status(200).json(allUsers)
