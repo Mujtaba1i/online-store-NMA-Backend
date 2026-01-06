@@ -1,10 +1,12 @@
 const express = require("express")
 const Product = require("../models/product")
+const verifyToken = require("../middleware/verify-token")
 const router = express.Router()
 
 //Create
-router.post("/", async (req, res) => {
+router.post("/",verifyToken, async (req, res) => {
     try {
+        req.body.user = req.user._id
         const product = await Product.create(req.body)
         res.status(201).json({ product })
     }
