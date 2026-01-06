@@ -45,6 +45,10 @@ router.post('/sign-in', async (req, res) => {
       return res.status(401).json({ err: 'Invalid Credentials' });
     }
 
+    if (userInDatabase.wantToBeSeller && userInDatabase.role !== "seller") {
+      return res.status(401).json({ err: 'Seller Request Pending' });
+    }
+
     const isValidPassword = bcrypt.compareSync(password, userInDatabase.password);
 
     if (!isValidPassword) {
