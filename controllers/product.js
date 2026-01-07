@@ -26,6 +26,19 @@ router.get("/", async (req, res) => {
         res.status(500).json({ err: "Failed to get products" })
     }
 })
+
+
+router.get("/my-products",verifyToken, async (req, res) => {
+    try {
+        const products = await Product.find({user:req.user._id})
+        res.status(200).json({ products })
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ err: "Failed to get products" })
+    }
+})
+
 //get one product
 router.get("/:id", async (req, res) => {
     try {
