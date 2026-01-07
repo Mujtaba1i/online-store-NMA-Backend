@@ -74,8 +74,18 @@ router.put('/:id/updateCart', async (req, res) => {
         const {id} = req.params
         const {productId} = req.body
 
+
+
         const foundUser = await User.findById(id)
-        foundUser.cart.push(productId)
+
+        const foundProduct = foundUser.cart.find((item)=>item.product == productId)
+        if (foundProduct) {
+            foundProduct.quantity += 1
+        } else {
+            foundUser.cart.push({product: productId, quantity: 1})
+        }
+            foundUser.cartTotal += 1
+
         foundUser.save()
 
         res.status(202).json('ADDED TO CART')
