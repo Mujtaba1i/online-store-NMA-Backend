@@ -23,7 +23,8 @@ router.post('/sign-up', async (req, res) => {
       _id: user._id,
       role: user.role,
       wantToBeSeller: user.wantToBeSeller,
-      cart: user.cart
+      cart: user.cart,
+      cartTotal: user.cartTotal
     };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
@@ -59,7 +60,8 @@ router.post('/sign-in', async (req, res) => {
       _id: userInDatabase._id,
       role: userInDatabase.role,
       wantToBeSeller: userInDatabase.wantToBeSeller,
-      cart: userInDatabase.cart
+      cart: userInDatabase.cart,
+      cartTotal: userInDatabase.cartTotal
     };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
