@@ -70,30 +70,59 @@ router.put('/:id', async (req, res) => {
 })
 
 router.put('/:id/updateCart', async (req, res) => {
-    try {
-        const {id} = req.params
-        const {productId} = req.body
+  try {
+    const { id } = req.params
+    const { productId, action } = req.body
 
+    const foundUser = await User.findById(id)
 
+    const foundItem = foundUser.cart.find(
+      item => item.product.toString() === productId
+    )
 
-        const foundUser = await User.findById(id)
-
-        const foundProduct = foundUser.cart.find((item)=>item.product == productId)
-        if (foundProduct) {
-            foundProduct.quantity += 1
-        } else {
-            foundUser.cart.push({product: productId, quantity: 1})
-        }
-            foundUser.cartTotal += 1
-
-        foundUser.save()
-
-        res.status(202).json('ADDED TO CART')
-    } catch (err) {
-        console.log(err.message)
-        res.status(500).json({err: 'Failed to Fetch Data'})        
+    if (action === 'increment') {
+      if (foundItem) {
+        foundItem.quantity += 1
+      } else {
+        foundUser.cart.push({ product: productId, quantity: 1 })
+      }
+      foundUser.cartTotal += 1
+      await foundUser.save()
+      return res.status(202).json('ADDED TO CART')
     }
+
+    if (action === 'decrement' && foundItem) {
+      foundItem.quantity -= 1
+      foundUser.cartTotal -= 1
+
+      if (foundItem.quantity <= 0) {
+        foundUser.cart = foundUser.cart.filter(
+          item => item.product.toString() !== productId
+        )
+      }
+
+      await foundUser.save()
+      return res.status(202).json('ADDED TO CART')
+    }
+    
+    if (action === 'delete' && foundItem) {
+      foundUser.cartTotal -= foundItem.quantity
+      foundUser.cart = foundUser.cart.filter(
+        item => item.product.toString() !== productId
+      )
+
+      await foundUser.save()
+      return res.status(202).json('DELETED FROM CART')
+    }
+
+    res.status(400).json({ err: 'Invalid action' })
+
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ err: 'Failed to Fetch Data' })
+  }
 })
+
 
 router.delete('/:id', async (req, res) => {
     try {

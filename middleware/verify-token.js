@@ -12,7 +12,7 @@ const verifyToken = (req, res, next) => {
       res.status(401).json({ err: 'Invalid Token' })
     }
   } else {
-    throw new Error('No Token')
+    return res.status(401).json({ err: 'No Token' })
   }
 }
 
