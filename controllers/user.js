@@ -35,7 +35,7 @@ router.get('/sellers', async (req,res) =>{
 router.get('/:id', async (req, res) => {
     try {
         const {id} = req.params
-        const oneUser = await User.findById(id)
+        const oneUser = await User.findById(id).populate('cart.product')
         if (!oneUser) {
             res.status(404).json({err: 'User Not Found'})
         } else {
