@@ -69,6 +69,22 @@ router.put('/:id', async (req, res) => {
     }
 })
 
+router.put('/:id/updateCart', async (req, res) => {
+    try {
+        const {id} = req.params
+        const {productId} = req.body
+
+        const foundUser = await User.findById(id)
+        foundUser.cart.push(productId)
+        foundUser.save()
+
+        res.status(202).json('ADDED TO CART')
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({err: 'Failed to Fetch Data'})        
+    }
+})
+
 router.delete('/:id', async (req, res) => {
     try {
         const {id} = req.params
