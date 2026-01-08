@@ -1,4 +1,5 @@
 const Order = require('../models/order')
+const User = require('../models/user')
 const express = require('express')
 const router = express.Router()
 
@@ -10,6 +11,16 @@ router.get('/', async (req,res) =>{
         console.log(err.message)
         res.status(500).json({err: 'Failed to Fetch Data'}) 
     }
+})
+
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.params.userId }).populate('products.product')
+    res.status(200).json(orders)
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ err: 'Failed to fetch orders' })
+  }
 })
 
 router.get('/:id', async (req, res) => {
@@ -27,15 +38,31 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
-    try {
-        const creatdOrder = await Order.create(req.body)
-        res.status(201).json(creatdOrder)        
-    } catch (err) {
-        console.log(err.message)
-        res.status(422).json({err: 'Failed to Create'})
-    }
+router.post('/checkout/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = await User.findById(id).populate('cart.product')
+    if (!user || !user.cart.length) return res.status(400).json('Cart is empty')
 
+    const products = user.cart.map(item => ({
+      product: item.product._id,
+      quantity: item.quantity
+    }))
+
+    await Order.create({
+      products,
+      user: user._id
+    })
+
+    user.cart = []
+    user.cartTotal = 0
+    await user.save()
+
+    res.status(201).json('ORDER CREATED')
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ err: 'Checkout failed' })
+  }
 })
 
 router.put('/:id', async (req, res) => {

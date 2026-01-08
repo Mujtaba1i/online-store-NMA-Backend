@@ -1,33 +1,35 @@
 const mongoose = require('mongoose')
 
-// we need mongoose schema
 const orderSchema = new mongoose.Schema(
   {
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product'
+    products: [
+      {
+        product: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: 'Product' 
+        },
+        quantity: { 
+          type: Number, 
+          required: true }
+
+      }
+    ],
+    notes: { 
+      type: String 
     },
-    notes: {
-      type: String
+    status: { 
+      type: String, 
+      enum: ['pending', 'approved', 'rejected'], 
+      default: 'pending' 
     },
-    quantity: {
-      type: Number,
-      required: true
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending'
-    },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+    user: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User' 
     }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 )
+
 
 orderSchema.set('toJSON', {
   transform: (document, returnedObject) => {
