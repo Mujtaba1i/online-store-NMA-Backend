@@ -14,15 +14,14 @@ router.post('/', verifyToken, async (req, res) => {
     res.status(500).json({ err: 'failed to create product' })
   }
 })
+
 //Read
 router.get('/', async (req, res) => {
   try {
-    const query = req.query.name ? req.query.name : ''
-    console.log('query', query)
+    const query = req.query.q ? req.query.q : ''
     const products = await Product.find({
       name: { $regex: query, $options: 'i' }
     })
-    console.log(products)
 
     res.status(200).json({ products })
   } catch (err) {
