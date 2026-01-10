@@ -27,6 +27,11 @@ router.get('/:id', async (req, res) => {
     try {
         const {id} = req.params
         const oneOrder = await Order.findById(id)
+            .populate('user')
+            .populate({
+                path: 'products.product',
+                populate: { path: 'user' }
+            })
         if (!oneOrder) {
             res.status(404).json({err: 'order Not Found'})
         } else {
@@ -87,6 +92,62 @@ router.delete('/:id', async (req, res) => {
         console.log(err.message)
         res.status(500).json({err: 'Failed to Delete'})
     }
+})
+
+router.patch('/orders/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, productId } = req.body;
+    
+    const order = await Order.findById(id).populate('products.product')
+    
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' })
+    }
+    
+    const productInOrder = order.products.find(oneProduct => oneProduct.product._id.toString() === productId)
+    
+    if (!productInOrder) {
+      return res.status(404).json({ message: 'Product not found in order' })
+    }
+    
+    if (productInOrder.product.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+    
+    order.status = status
+    await order.save()
+    
+    res.json(order)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: err.message })
+  }
+});
+
+router.get('/seller/orders', async (req, res) => {
+  try {
+    const sellerId = req.user._id
+    
+    const orders = await Order.find()
+      .populate({
+        path: 'products.product',
+        populate: { path: 'user' }
+      })
+      .populate('user')
+    
+    const sellerOrders = orders.filter(order => 
+      order.products.some(item => 
+        item.product && item.product.user && 
+        item.product.user._id.toString() === sellerId.toString()
+      )
+    )
+    
+    res.status(200).json({ orders: sellerOrders })
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ err: 'Failed to Fetch Orders' })
+  }
 })
 
 module.exports = router
